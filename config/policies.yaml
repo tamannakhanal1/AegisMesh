@@ -1,0 +1,8 @@
+# AegisMesh policy settings
+analyzer:
+  risk_threshold: 0.6   # above this -> alert
+  log_path: ./logs/events.log
+
+node:
+  normal_interval: 3
+  suspicious_chance: 0.15

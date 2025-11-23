@@ -1,0 +1,27 @@
+version: "3.8"
+services:
+  analyzer:
+    build:
+      context: ./analyzer
+    command: uvicorn analyzer:app --host 0.0.0.0 --port 9000
+    ports:
+      - "9000:9000"
+    volumes:
+      - ./logs:/app/../logs
+    environment:
+      - PYTHONUNBUFFERED=1
+
+  mesh_node:
+    image: python:3.11-slim
+    working_dir: /app
+    volumes:
+      - ./mesh_node:/app
+    command: ["python", "node.py", "--analyzer", "http://analyzer:9000/events", "--mode", "simulate", "--interval", "2"]
+    depends_on:
+      - analyzer
+
+  sandbox:
+    build:
+      context: ./sandbox
+    container_name: aegismesh_sandbox
+    restart: "no"
